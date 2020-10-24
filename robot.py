@@ -157,7 +157,8 @@ def main_loop():
             print(robot.name + " finished doing their tasks!\n")
         
         #now write back to the tasks.json file to persist the tasks completed
-        
+        with open("tasks.json", "w") as t:
+            json.dump(data,t)
 
     #if error to the input
     else:
