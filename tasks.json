@@ -1,28 +1,5 @@
 [
     {
-<<<<<<< HEAD
-        "description": "do the dishes",
-        "eta": 1000
-    },
-    {
-        "description": "sweep the house",
-        "eta": 3000
-    },
-    {
-        "description": "do the laundry",
-        "eta": 10000
-    },
-    {
-        "description": "take out the recycling",
-        "eta": 4000
-    },
-    {
-        "description": "make a sammich",
-        "eta": 7000
-    },
-    {
-=======
->>>>>>> cl-interface
         "description": "mow the lawn",
         "eta": 20000
     },
@@ -44,26 +21,10 @@
     },
     {
         "description": "pull the weeds",
-<<<<<<< HEAD
-        "eta": 3
-    },
-    {
-        "description": "jo",
-        "eta": 3
-    },
-    {
-        "description": "pull weeds",
-        "eta": 2
-    },
-    {
-        "description": "plant garden",
-        "eta": 5
-=======
         "eta": 2000
     },
     {
         "description": "wash the van",
         "eta": 1000
->>>>>>> cl-interface
     }
 ]
