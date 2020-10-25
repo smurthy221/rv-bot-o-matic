@@ -6,6 +6,7 @@ This program simulates robots finishing up household tasks with a task descripti
 ## II. Running the Bot-O-Matic
 ### Prerequesites:
 All users will need to install python3 package. More information about installation [here](https://realpython.com/installing-python/)
+Clone the repository to you local computer using 'git clone (link here)'
 ### Command Line Usage:
 ```
 python3 robot.py
