@@ -197,11 +197,13 @@ def main_loop():
                 print("invalid index")
         else:
             print("invalid index")
-
     #if they choose to view the leaderboard
     elif option == "leaderboard":
+        #copies over original array to temp leaderboard array to maintain original order
         leader_list = robot_array
+        #sorts by tasks done in descending order with lambda fucntion
         leader_list.sort(key=lambda robot: robot.tasks_done, reverse=True)
+        #printing leaderboard
         print("LEADERBOARD:")
         rank = 1
         for item in leader_list:
@@ -247,7 +249,7 @@ def main_loop():
         # larger datasets though, it is definitiely something that I can re-design.  
     #if error to the input
     else:
-        print("unidentified input")
+        print("ERROR: unidentified input")
 
     #return back to top of loop
     main_loop()
