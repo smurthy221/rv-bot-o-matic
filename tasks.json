@@ -1,5 +1,6 @@
 [
     {
+<<<<<<< HEAD
         "description": "do the dishes",
         "eta": 1000
     },
@@ -20,6 +21,8 @@
         "eta": 7000
     },
     {
+=======
+>>>>>>> cl-interface
         "description": "mow the lawn",
         "eta": 20000
     },
@@ -41,6 +44,7 @@
     },
     {
         "description": "pull the weeds",
+<<<<<<< HEAD
         "eta": 3
     },
     {
@@ -54,5 +58,12 @@
     {
         "description": "plant garden",
         "eta": 5
+=======
+        "eta": 2000
+    },
+    {
+        "description": "wash the van",
+        "eta": 1000
+>>>>>>> cl-interface
     }
 ]

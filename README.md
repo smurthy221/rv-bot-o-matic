@@ -1,82 +1,120 @@
-# BOT-O-MAT
-Use any language to complete this challenge. The implementation is up to you: it can be a command-line application or have a graphical interface.
+# RV-Bot-O-Matic
 
-A housecleaning service wants to automate their process using robots and needs your help to create robots that can complete a variety of tasks.
+## I. Introduction
+This program simulates robots finishing up household tasks with a task description and estimated time until finish. It keeps track of tasks through the tasks.json file, which will update as users complete and add different tasks to do.
 
-Your application should collect a name and robot type from the types we list below. For each, it should create a Robot of the type the user chooses, e.g. Larry, Bipedal.
-
-Given the list of tasks below, your application should then assign the Robot a set of five tasks, all of which complete after a duration that we show in milliseconds.
-
-
-
-- Collect a name and robot type from user.
-- Instantiate a Robot of the type provided by the user with the name provided by the user
-  - for example: Bipedal, Larry
-- Set up methods on Robot to complete tasks from the provided list
-
-## Robot
-Robot completes tasks and removes them from the list when they are done (i.e. enough time has passed since starting the task).
-
-## Tasks
-Tasks have a description and an estimated time to complete.
-
+## II. Running the Bot-O-Matic
+### Prerequesites:
+All users will need to install python3 package. More information about installation [here](https://realpython.com/installing-python/)
+### Command Line Usage:
 ```
-[
-  {
-    description: 'do the dishes',
-    eta: 1000,
-  },{
-    description: 'sweep the house',
-    eta: 3000,
-  },{
-    description: 'do the laundry',
-    eta: 10000,
-  },{
-    description: 'take out the recycling',
-    eta: 4000,
-  },{
-    description: 'make a sammich',
-    eta: 7000,
-  },{
-    description: 'mow the lawn',
-    eta: 20000,
-  },{
-    description: 'rake the leaves',
-    eta: 18000,
-  },{
-    description: 'give the dog a bath',
-    eta: 14500,
-  },{
-    description: 'bake some cookies',
-    eta: 8000,
-  },{
-    description: 'wash the car',
-    eta: 20000,
-  },
-]
+python3 robot.py
 ```
 
-## Types
+## III. Bot-O-Matic Details
+### Program Format
+The Bot-O-Matic script runs similar to a Python command line interface. There is a command line which will take in input and user commands that we will detail below. Below is an example command line that will be used to take in user input.
 ```
-{
-  UNIPEDAL: 'Unipedal',
-  BIPEDAL: 'Bipedal',
-  QUADRUPEDAL: 'Quadrupedal',
-  ARACHNID: 'Arachnid',
-  RADIAL: 'Radial',
-  AERONAUTICAL: 'Aeronautical'
-}
+>>
 ```
 
-## Features to add once the core functionality is complete
-Be creative and have fun! Use this list or create your own features.
-- Allow users to create multiple robots at one time
-- Create a leaderboard for tasks completed by each Robot
-- Create tasks specific for each robot type, this could work in conjunction with the leaderboard. For e.g. robots that are assigned tasks that their type can’t perform won’t get “credit” for finishing the task.
-- Add persistance for tasks, bots and leaderboard stats
-- Some customers want your robots to accomplish tasks that are not on your list, so they'd like for you to add the ability for users to create new kinds of tasks and have the robots complete them
+### Commands
+The master list of commands is listed below:<br/>
+- 'run' : will execute simulation of robots completing tasks
+- 'add tasks' : will add extra tasks for the robots to complete
+- 'add robots' : will add extra robots to the running program
+- 'view tasks' : will list all tasks remaining for robots to complete
+- 'view robots' : will display all existing robots created
+- 'delete robots' : will delete any robots running in the program
+- 'leaderboard' : will display the robots who have completed the most tasks in descending order
+- 'exit' : will exit the module
+
+More information about each command is listed below.
+
+### run
+By entering this command, the program will execute the simulation and remove tasks from the list (as indentified in tasks.json). These tasks will take a variable amount of time defined in the tasks.json file in 'eta'.<br/>
+```
+>> run
+(robot name here) doing (task here)
+...
+```
+When removing tasks from the list, it will also update the tasks.json file and remove tasks that have been completed.
+
+### add tasks
+The add tasks command will take in user input and append the respective tasks the user supplies to the tasks.json file.
+```
+>> add tasks
+How many tasks would you like to add?: (user input here)
+enter task 1 name: (user input here)
+enter task 1 time (in seconds): (user input here)
+...
+```
+### add robots
+The add robots command will take in user input and add the robots to a master list kept during each interface session. <br/>
+Each robot has a specific type and eahc type can do a limited amount of tasks, depending on eta.
+The types are: 'Unipedal', 'Bipedal', 'Quadrupedal', 'Arachnid',  'Radial', 'Aeronautical'
+```
+>> add robots
+How many robots would you like to add?: (user input here)
+Enter robot 1 name: (robot 1 name)
+Enter (robot 1 name) type  (enter 'help' for list of robot types): (robot 1 type)
+...
+```
+If you press the 'help' option:
+```
+>> add robots
+...
+Enter (robot 1 name) type  (enter 'help' for list of robot types): help
+Robot Types = Unipedal, Bipedal, Quadrupedal, Arachnid,  Radial, Aeronautical
+Enter (robot 1 name) type  (enter 'help' for list of robot types):
+```
+
+### view tasks
+This command will print all of the pending tasks from the tasks.json file.
+```
+>> view tasks
+        {'description': 'mow the lawn', 'eta': 20000}
+        {'description': 'rake the leaves', 'eta': 18000}
+        ...
+```
+
+### view robots
+This command will display all created robots in order of when they were created.
+```
+>> view robots
+------------------------------------------------
+Robot Name: (name here)
+Robot ID: 0
+Robot Type: (type here)
+Robot Tasks Completed: 0
+------------------------------------------------
+...
+```
+
+### delete robots
+'delete robots will delete robots by ID number. You can find the ID number easily with the 'view robots' command.
+```
+>> delete robots
+What robot would you like to delete? (please enter their ID): [index]
+Deleted Robot #[index]
+```
+
+### leaderboard
+The leaderboard command will show the robots leaderboard, with the robot completing the most tasks at the top and descending from there.
+```
+>> leaderboard
+LEADERBOARD:
+Rank 1: [Robot x] with 3 tasks done!
+Rank 2: [Robot z] with 2 tasks done!
+Rank 3: [Robot w] with 2 tasks done!
+...
+```
+
+### exit
+Will exit the command line interface
+```
+>> exit
+$
+```
 
 
-## Authors
-- Scott Hoffman <https://github.com/scottshane>
-- Olivia Osby <https://github.com/oosby>
