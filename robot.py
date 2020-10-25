@@ -10,38 +10,68 @@ Type = {
 #the master data structure for the robots in the simulation
 robot_array = []
 
-def TypeError():
-    print("TypeError, please check spelling on input")
-    exit(1)
+def CanComplete(robot_type, eta):
+    """Defining task criteria for each type of Robot"""
+    #Unipedal can only do a task if eta = (0,inifinity)
+    if robot_type == "Unipedal":
+        if eta > 0:
+            return True
+        else:
+            return False
+    #Bipedal can only do a task if eta = (1200,20000)
+    elif robot_type == "Bipedal": 
+        if eta > 1200 and eta < 20000:
+            return True
+        else:
+            return False
+    #Quadrupedal can only do a task if eta = (500,25000)
+    elif robot_type == "Quadrupedal": 
+        if eta > 500 and eta < 25000:
+            return True
+        else:
+            return False 
+    #Arachnid can only do a task if eta = (0,10000)
+    elif robot_type == "Arachnid": 
+        if eta > 0 and eta < 10000:
+            return True
+        else:
+            return False
+    #Radial can only do a task if eta = (1200,20000)
+    elif robot_type == "Radial": 
+        if eta > 1000 and eta < 30000:
+            return True
+        else:
+            return False
+    #Aeronautical can only do a task if eta = (5000,100000)
+    elif robot_type == "Aeronautical": 
+        if eta > 5000 and eta < 100000:
+            return True
+        else:
+            return False
 
 class Robot:
     """Robot object Class"""
-    def __init__(self, name, hasTask, rob_type):
+    def __init__(self, name, rob_type):
         """Robot Constructor"""
-        #if type passed in is not in the Type set, exit(1)
+        #if type passed in is in the Type set, initialize the object
         if rob_type in Type:
             self.type = rob_type
             self.name = name
-            self.hasTask = hasTask
             self.tasks_done = 0
+        #if type passed in is not in the Type set, dont initialize the object
         else:
-            print("TypeError, please check spelling on input")
+            print("Please check spelling on input")
 
-    #if given a task, the robot will do it in this time
     def giveTask(self,task_name, eta):
         """Assigning robot a task"""
-        #if not already assigned a task
-        if not self.hasTask:
-            #assign the robot the task and print when it finishes
-            self.hasTask = True
-            print (self.name + " doing " + task_name)
-            print ("...") 
-            time.sleep(eta*.001) #gives the delay until the task is finished
-            print (self.name + " finished " + task_name + "\n")
+        #assign the robot the task and print when it finishes
+        print (self.name + " doing " + task_name)
+        print ("...") 
+        time.sleep(eta*.001) #gives the delay until the task is finished
+        print (self.name + " finished " + task_name + "\n")
 
-            #increment number of tasks completed and free up opportunity to do task
-            self.tasks_done = self.tasks_done + 1
-            self.hasTask = False
+        #increment number of tasks completed and free up opportunity to do task
+        self.tasks_done = self.tasks_done + 1
 
 def addTask(task_description, task_eta):
     """Adding task to the existing JSON"""
@@ -68,7 +98,7 @@ def robot_adding_loop(robot_name):
     robot_type = input("Enter " + robot_name + " type (enter 'help' for list of robot types): ")
     #if user does not enter 'help', create Robot object and add to passed in array
     if robot_type != "help" and robot_type != "Help":
-        robot = Robot(robot_name,False,robot_type)
+        robot = Robot(robot_name,robot_type)
         robot_array.append(robot)
     #otherwise print out robot types and recursively call robot_adding_loop
     else:
@@ -76,14 +106,14 @@ def robot_adding_loop(robot_name):
         robot_adding_loop(robot_name) #recursive call helps ensure that 'help' can be called infinite number of times
 
 def main_loop():
-    """The main loop that drives the entire program"""
+    """Program Driver"""
     #takes in input for what user would like to do
     option = input(">> ")
 
     #if they press the help option, print out options avaliable for them
     if option == "exit":
         exit(0)
-    
+    #for user needing help at the command line
     elif option == "help":
         print("\tOptions:")
         print("\t-'run' to execute tasks")
@@ -91,9 +121,7 @@ def main_loop():
         print("\t-'add robots' to add more robots")
         print("\t-'view tasks' to view remaining tasks to be completed")
         print("\t-'view robots' to view robots you've created")
-        print("\t-'leaderboard' to view robot leaderboard") #not completed
-        print("\t-'exit' to exit module")
-    
+        print("\t-'exit' to exit module")   
     #if they look to add tasks
     elif option == "add tasks":
         #take in the number of tasks they look to add
@@ -139,7 +167,7 @@ def main_loop():
                 print ("Robot Name: " + str(robot.name))
                 print ("Robot Type: " + str(robot.type))
                 print ("Robot Tasks Completed: " + str(robot.tasks_done))
-                print ("------------------------------------------------")
+                print ("------------------------------------------------")            
     #if they run the simulation
     elif option == "run":
         #instantiate data list to hold json data
@@ -148,18 +176,37 @@ def main_loop():
         with open("tasks.json") as t:
             data = json.load(t);
 
-        #assign first 5 tasks each robot in array to complete
-        for robot in robot_array:
-            while len(data)!=0 and robot.tasks_done < 5:
-                robot.giveTask(data[0]["description"],float(data[0]["eta"]))
-                data.pop(0)
-            #once all robots 5 tasks are complete
-            print(robot.name + " finished doing their tasks!\n")
+        #assign tasks for robots to complete
+        count = 0
+        deleted_indices = []
+        while count < len(data): #for each task
+            for robot in robot_array: 
+                #if a robot can complete the task, give task and add to deleted indices
+                if CanComplete(robot.type,float(data[count]["eta"])):
+                    robot.giveTask(data[count]["description"],float(data[count]["eta"]))
+                    deleted_indices.append(count)
+                    print(count)
+                    break
+            count+=1
+
+        #delete tasks completed
+        num_del = 0
+        for index in deleted_indices:
+            data.pop(index+num_del)
+            num_del-=1
         
         #now write back to the tasks.json file to persist the tasks completed
         with open("tasks.json", "w") as t:
-            json.dump(data,t)
+            json.dump(data,t, indent=4)
 
+        #POTENTIAL OPTIMIZATION: running the simulation takes roughly O(mn) time, 
+        #where m is number of robots and n is number of tasks.
+        #We could shorten this to O(n) if we stored the robots in a map or set,
+        #where we would be able to access in O(1) time. The only reason I didn't implement 
+        #this is due to the leaderboard, where it would be easier to sort an array for implement 
+        #leaderboard functionality as opposed to a map. If this becomes too slow for 
+        # larger datasets though, it is definitiely something that I can re-design.
+    
     #if error to the input
     else:
         print("unidentified input")
