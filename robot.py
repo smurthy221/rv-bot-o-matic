@@ -51,10 +51,11 @@ def CanComplete(robot_type, eta):
 
 class Robot:
     """Robot object Class"""
-    def __init__(self, name, rob_type):
+    def __init__(self, name, rob_type, ID):
         """Robot Constructor"""
         #if type passed in is in the Type set, initialize the object
         if rob_type in Type:
+            self.uniqID = ID
             self.type = rob_type
             self.name = name
             self.tasks_done = 0
@@ -98,8 +99,12 @@ def robot_adding_loop(robot_name):
     robot_type = input("Enter " + robot_name + " type (enter 'help' for list of robot types): ")
     #if user does not enter 'help', create Robot object and add to passed in array
     if robot_type != "help" and robot_type != "Help":
-        robot = Robot(robot_name,robot_type)
-        robot_array.append(robot)
+        if len(robot_array) > 0:
+            robot = Robot(robot_name,robot_type, (robot_array[len(robot_array)-1].uniqID + 1))
+            robot_array.append(robot)
+        else:
+            robot = Robot(robot_name,robot_type, 0)
+            robot_array.append(robot)
     #otherwise print out robot types and recursively call robot_adding_loop
     else:
         print("Robot Types = Unipedal, Bipedal, Quadrupedal, Arachnid,  Radial, Aeronautical")
@@ -121,33 +126,41 @@ def main_loop():
         print("\t-'add robots' to add more robots")
         print("\t-'view tasks' to view remaining tasks to be completed")
         print("\t-'view robots' to view robots you've created")
+        print("\t-'delete robots' to delete robots you've created")
+        print("\t-'leaderboard' to view the leaderboard")
         print("\t-'exit' to exit module")   
     #if they look to add tasks
     elif option == "add tasks":
         #take in the number of tasks they look to add
         num_tasks = input("How many tasks would you like to add?: ")
-        #for each new task they look to add
-        count = 0
-        while count < int(num_tasks):
-            #take in the task name
-            task_name = input("enter task " + str(count+1) + " name: ")
-            #take in task time in seconds
-            task_time = input("enter task " + str(count+1) + " time (in seconds): ")
-            #add task to the tasks.json file and increment count
-            addTask(task_name, int(task_time))
-            count+=1
+        if num_tasks.isnumeric():
+            #for each new task they look to add
+            count = 0
+            while count < int(num_tasks):
+                #take in the task name
+                task_name = input("enter task " + str(count+1) + " name: ")
+                #take in task time in seconds
+                task_time = input("enter task " + str(count+1) + " time (in seconds): ")
+                #add task to the tasks.json file and increment count
+                addTask(task_name, int(task_time))
+                count+=1
+        else:
+            print("ERROR: unidentified input")
     #if they look to add robots
     elif option == "add robots":
         #take in the number they look to add
         num_robots = input("How many robots would you like to add?: ")
-        #for each new robot they look to add
-        count = 0
-        while count < int(num_robots):
-            #take in robot name
-            robot_name = input("Enter robot " + str(count+1) + " name: ")
-            #append the new robot created to the robot_array and reassign it
-            robot_adding_loop(robot_name)
-            count+=1
+        if num_robots.isnumeric():
+            #for each new robot they look to add
+            count = 0
+            while count < int(num_robots):
+                #take in robot name
+                robot_name = input("Enter robot " + str(count+1) + " name: ")
+                #append the new robot created to the robot_array and reassign it
+                robot_adding_loop(robot_name)
+                count+=1
+        else:
+            print("ERROR: unidentified input")
     #if they choose to view existing tasks
     elif option == "view tasks":
         #instantiate data list to hold json data
@@ -165,9 +178,35 @@ def main_loop():
             #for each robot in the robot_array
             for robot in robot_array:
                 print ("Robot Name: " + str(robot.name))
+                print ("Robot ID: " + str(robot.uniqID))
                 print ("Robot Type: " + str(robot.type))
                 print ("Robot Tasks Completed: " + str(robot.tasks_done))
                 print ("------------------------------------------------")            
+    #if they choose to delete existing robots
+    elif option == "delete robots":
+        #takes in user input for what robot they want to delete
+        index = input("What robot would you like to delete? (please enter their ID): ")
+        if index.isnumeric():
+            #if the object with the input ID is in the robot array 
+            inArr = any(obj.uniqID == int(index) for obj in robot_array)
+            if inArr:
+                #pop from the robot array
+                robot_array.pop(int(index))
+                print("Deleted Robot #" + str(index))
+            else:
+                print("invalid index")
+        else:
+            print("invalid index")
+
+    #if they choose to view the leaderboard
+    elif option == "leaderboard":
+        leader_list = robot_array
+        leader_list.sort(key=lambda robot: robot.tasks_done, reverse=True)
+        print("LEADERBOARD:")
+        rank = 1
+        for item in leader_list:
+            print("Rank " + str(rank) + ": " + str(item.name) + " with " + str(item.tasks_done) + " tasks done!")
+            rank+=1
     #if they run the simulation
     elif option == "run":
         #instantiate data list to hold json data
@@ -205,8 +244,7 @@ def main_loop():
         #where we would be able to access in O(1) time. The only reason I didn't implement 
         #this is due to the leaderboard, where it would be easier to sort an array for implement 
         #leaderboard functionality as opposed to a map. If this becomes too slow for 
-        # larger datasets though, it is definitiely something that I can re-design.
-    
+        # larger datasets though, it is definitiely something that I can re-design.  
     #if error to the input
     else:
         print("unidentified input")
