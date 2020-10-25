@@ -98,7 +98,7 @@ def robot_adding_loop(robot_name):
     #entering name
     robot_type = input("Enter " + robot_name + " type (enter 'help' for list of robot types): ")
     #if user does not enter 'help', create Robot object and add to passed in array
-    if robot_type != "help" and robot_type != "Help":
+    if robot_type == 'Unipedal' or robot_type == 'Bipedal' or robot_type == 'Quadrupedal' or robot_type == 'Arachnid' or robot_type == 'Radial' or robot_type == 'Aeronautical':
         if len(robot_array) > 0:
             robot = Robot(robot_name,robot_type, (robot_array[len(robot_array)-1].uniqID + 1))
             robot_array.append(robot)
