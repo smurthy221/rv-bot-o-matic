@@ -115,7 +115,7 @@ def main_loop():
     #takes in input for what user would like to do
     option = input(">> ")
 
-    #if they press the help option, print out options avaliable for them
+    #for exiting cl interface
     if option == "exit":
         exit(0)
     #for user needing help at the command line
@@ -138,9 +138,9 @@ def main_loop():
             count = 0
             while count < int(num_tasks):
                 #take in the task name
-                task_name = input("enter task " + str(count+1) + " name: ")
+                task_name = input("Enter task " + str(count+1) + " name: ")
                 #take in task time in seconds
-                task_time = input("enter task " + str(count+1) + " time (in seconds): ")
+                task_time = input("Enter task " + str(count+1) + " time (in seconds): ")
                 #add task to the tasks.json file and increment count
                 addTask(task_name, int(task_time))
                 count+=1
@@ -226,7 +226,6 @@ def main_loop():
                 if CanComplete(robot.type,float(data[count]["eta"])):
                     robot.giveTask(data[count]["description"],float(data[count]["eta"]))
                     deleted_indices.append(count)
-                    print(count)
                     break
             count+=1
 
@@ -250,7 +249,6 @@ def main_loop():
     #if error to the input
     else:
         print("ERROR: unidentified input")
-
     #return back to top of loop
     main_loop()
 
